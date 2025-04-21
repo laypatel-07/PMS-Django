@@ -2,7 +2,6 @@
 
 WorkSync is a web-based project management system built with Django that allows users to create projects, manage tasks, and track progress. It features a modern, responsive interface with Tailwind CSS that provides a smooth user experience.
 
-![WorkSync Dashboard](https://via.placeholder.com/800x400)
 
 ## Features
 
@@ -165,15 +164,6 @@ The project uses Tailwind CSS for styling. To modify styles:
 1. Edit the Tailwind configuration in the `theme` directory
 2. Make changes to the templates using Tailwind utility classes
 
-## Deployment
-
-For production deployment:
-
-1. Set `DEBUG = False` in `settings.py`
-2. Configure a proper database (MySQL, PostgreSQL)
-3. Set up static files serving
-4. Use a production WSGI server like Gunicorn
-5. Set up a reverse proxy like Nginx
 
 ## Contributing
 
