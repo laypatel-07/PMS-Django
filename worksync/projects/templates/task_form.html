@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% if task %}Edit Task{% else %}Create Task{% endif %} - Worksync
+{% endblock %}
+
+{% block content %}
+<div class="py-6">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gray-800 shadow rounded-lg border border-gray-700">
+            <div class="px-4 py-5 sm:p-6">
+                <h1 class="text-2xl font-bold text-primary-400 mb-4">
+                {% if form.instance.pk %}Edit Project{% else %}Create Project Task{% endif %}
+                </h1>
+                <h2 class="text-lg text-gray-300 mb-6">Project: {{ project.text }}</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-300">Title</label>
+                        <div class="mt-1">
+                            <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm" value="{{ form.title.value|default:'' }}">
+                        </div>
+                        {% if form.title.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.title.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-300">Description</label>
+                        <div class="mt-1">
+                            <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" rows="4" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm">{{ form.description.value|default:'' }}</textarea>
+                        </div>
+                        {% if form.description.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.description.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-300">Status</label>
+                        <div class="mt-1">
+                            <select name="{{ form.status.name }}" id="{{ form.status.id_for_label }}" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                                {% for value, label in form.fields.status.choices %}
+                                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if form.status.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.status.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.priority.id_for_label }}" class="block text-sm font-medium text-gray-300">Priority</label>
+                        <div class="mt-1">
+                            <select name="{{ form.priority.name }}" id="{{ form.priority.id_for_label }}" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                                {% for value, label in form.fields.priority.choices %}
+                                <option value="{{ value }}" {% if form.priority.value == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if form.priority.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.priority.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.assigned_to.id_for_label }}" class="block text-sm font-medium text-gray-300">Assigned To</label>
+                        <div class="mt-1">
+                            <select name="{{ form.assigned_to.name }}" id="{{ form.assigned_to.id_for_label }}" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                                <option value="">-- Unassigned --</option>
+                                {% for value, label in form.fields.assigned_to.choices %}
+                                <option value="{{ value }}" {% if form.assigned_to.value == value|stringformat:"i" %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if form.assigned_to.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.assigned_to.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.due_date.id_for_label }}" class="block text-sm font-medium text-gray-300">Due Date</label>
+                        <div class="mt-1">
+                            <input type="date" name="{{ form.due_date.name }}" id="{{ form.due_date.id_for_label }}" class="block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm" value="{{ form.due_date.value|date:'Y-m-d'|default:'' }}">
+                        </div>
+                        {% if form.due_date.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ form.due_date.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <a href="{% url 'task_list' project.id %}" class="inline-flex items-center px-4 py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            Cancel
+                        </a>
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            {% if task %}Save Changes{% else %}Create Task{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
